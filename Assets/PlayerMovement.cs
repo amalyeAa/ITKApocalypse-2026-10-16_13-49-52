@@ -3,10 +3,9 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterController controller;
-    public float walkSpeed = 3f;
-    public float runSpeed = 10f;
+    public float speed = 5f;
     public float gravity = -9.81f;
-    public float jumpHeight = 1f;
+    public float jumpHeight = 1.5f;
 
     public Transform groundCheck;
     public float groundDistance = 0.4f;
@@ -29,12 +28,9 @@ public class PlayerMovement : MonoBehaviour
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
-        // Tentukan speed berdasarkan input Shift
-        float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
-
         // Gerakkan player
         Vector3 move = transform.right * x + transform.forward * z;
-        controller.Move(move * currentSpeed * Time.deltaTime);
+        controller.Move(move * speed * Time.deltaTime);
 
         // Lompat
         if (Input.GetButtonDown("Jump") && isGrounded)
