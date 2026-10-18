@@ -14,23 +14,26 @@ public class PlayerInteract : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, interactDistance))
         {
+            // 1. Cek kalau yang kena itu PINTU
             InteractableDoor door = hit.collider.GetComponent<InteractableDoor>();
-
             if (door != null)
             {
-                // Tampilkan teks terus selama ngadepin pintu
-                if (promptText != null) promptText.text = "[ E ] Interact"; 
+                if (promptText != null) promptText.text = "[ E ] Buka / Tutup";
+                if (Input.GetKeyDown(KeyCode.E)) door.Interact();
+                return;
+            }
 
-                // Kalau pencet E, panggil fungsi Interact (yang bisa buka & tutup)
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    door.Interact();
-                }
-                return; 
+            // 2. Cek kalau yang kena itu ITEM
+            ItemPickup item = hit.collider.GetComponent<ItemPickup>();
+            if (item != null)
+            {
+                if (promptText != null) promptText.text = "[ E ] Ambil " + item.itemData.itemName;
+                if (Input.GetKeyDown(KeyCode.E)) item.PickUp();
+                return;
             }
         }
-        
-        // Sembunyiin kalau nggak ngadepin pintu
+
+        // Kalau nggak kena apa-apa
         if (promptText != null) promptText.text = "";
     }
 }
