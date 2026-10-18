@@ -19,11 +19,17 @@ public class FirstPersonController : MonoBehaviour
     bool isGrounded;
     float xRotation = 0f;
 
+    // Variabel buat nyambungin ke PlayerStats
+    private PlayerStats stats;
+
     void Start()
     {
         // Kunci kursor mouse ke tengah layar
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        // Ambil komponen PlayerStats dari objek yang sama
+        stats = GetComponent<PlayerStats>();
     }
 
     void Update()
@@ -52,7 +58,15 @@ public class FirstPersonController : MonoBehaviour
         float z = Input.GetAxis("Vertical");
 
         Vector3 move = transform.right * x + transform.forward * z;
-        float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
+        
+        // --- LOGIKA BARU: CEK STAMINA BUAT LARI ---
+        float currentSpeed = walkSpeed; // Defaultnya jalan biasa
+        
+        // Kalau pencet Shift DAN staminanya lebih dari 10, baru boleh lari
+        if (Input.GetKey(KeyCode.LeftShift) && stats != null && stats.stamina > 10f)
+        {
+            currentSpeed = runSpeed;
+        }
 
         controller.Move(move * currentSpeed * Time.deltaTime);
 
